@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <title>Individualna lestvica igralcev</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 10px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      width: 100%;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: max-content;
+      min-width: 100%;
+      table-layout: fixed;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+      background-color: white;
+      word-wrap: break-word;
+      white-space: normal;
+    }
+
+    th {
+      background-color: #f0f0f0;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      font-weight: bold;
+    }
+
+    /* Fiksni 1. stolpec: Mesto */
+    th:nth-child(1), td:nth-child(1) {
+      position: sticky;
+      left: 0;
+      z-index: 10;
+      background-color: #f9f9f9;
+      min-width: 50px;
+    }
+
+    /* Fiksni 2. stolpec: Ime */
+    th:nth-child(2), td:nth-child(2) {
+      position: sticky;
+      left: 65px;
+      z-index: 10;
+      background-color: #f9f9f9;
+      min-width: 100px;
+      text-align: left;
+    }
+
+    /* Nastavitve širine ostalih stolpcev */
+    th:nth-child(n+3), td:nth-child(n+3) {
+      min-width: 100px;
+      max-width: 130px;
+    }
+
+    /* Responsive – omogoča prelom besed */
+    @media (max-width: 600px) {
+      th, td {
+        font-size: 14px;
+        padding: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>Individualna lestvica</h2>
+  <div class="table-container">
+    <table id="individualna-lestvica"></table>
+  </div>
+
+  <script>
+    async function naloziTabelo() {
+      const url = "https://docs.google.com/spreadsheets/d/18Ujo_GBlPSeIlbakezqwTO5c6WDIi1JHG9qF1g9hwZ0/export?format=csv&gid=863936536";
+      const response = await fetch(url);
+      const text = await response.text();
+      const rows = text.trim().split("\n").map(row => row.split(","));
+
+      const tabela = document.getElementById("individualna-lestvica");
+      tabela.innerHTML = "";
+
+      rows.forEach((vrstica, i) => {
+        const tr = document.createElement("tr");
+        vrstica.forEach((celica, j) => {
+          const el = document.createElement(i === 0 ? "th" : "td");
+          el.textContent = celica;
+          tr.appendChild(el);
+        });
+        tabela.appendChild(tr);
+      });
+    }
+
+    naloziTabelo();
+  </script>
+</body>
+</html>
